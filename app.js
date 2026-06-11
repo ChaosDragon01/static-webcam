@@ -27,6 +27,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             currentStream = await navigator.mediaDevices.getUserMedia(constraints);
             videoElement.srcObject = currentStream;
             errorMessage.classList.remove('visible');
+
+            // FIX 1: Dynamically mirror the live preview element for the front camera only
+            if (useFront) {
+                videoElement.style.transform = 'scaleX(-1)';
+            } else {
+                videoElement.style.transform = 'scaleX(1)';
+            }
         } catch (err) {
             console.error("Camera access denied or hardware error:", err);
             showError("Unable to access the camera. Please ensure permissions are granted and no other app is using it.");
@@ -62,6 +69,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         canvas.height = videoElement.videoHeight;
         
         const ctx = canvas.getContext('2d');
+
+        // FIX 2: Horizontally flip the canvas context if using the front camera
+        // This ensures the downloaded image matches exactly what the user saw on screen
+        if (useFrontCamera) {
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+        }
+        
         ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
         
         // Convert frame to image and trigger download
