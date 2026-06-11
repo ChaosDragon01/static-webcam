@@ -1,63 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>User Camera Info</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: #f4f4f4;
-      padding: 20px;
-    }
-    video {
-      border: 2px solid #333;
-      border-radius: 8px;
-      max-width: 100%;
-      height: auto;
-    }
-    #info {
-      margin-top: 15px;
-      background: #fff;
-      padding: 10px;
-      border-radius: 6px;
-      display: inline-block;
-      text-align: left;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Webcam Interface</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>📷 Your Camera Feed & Info</h1>
-  <video id="video" autoplay playsinline></video>
-  <div id="info">
-    <strong>Camera Info:</strong>
-    <ul id="cameraDetails"></ul>
-  </div>
+    <header class="app-header">
+        <h1>Live Feed</h1>
+    </header>
 
-  <script>
-    async function initCamera() {
-      try {
-        // Request camera access
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        document.getElementById('video').srcObject = stream;
+    <main class="app-main">
+        <div class="video-container">
+            <video id="webcam" autoplay playsinline></video>
+            <div id="error-message" class="error-panel">Camera access denied or not available.</div>
+        </div>
+    </main>
 
-        // Get device info
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
-        
-        const list = document.getElementById('cameraDetails');
-        videoDevices.forEach((device, index) => {
-          const li = document.createElement('li');
-          li.textContent = `Camera ${index + 1}: ${device.label || 'Unnamed Camera'}`;
-          list.appendChild(li);
-        });
-      } catch (err) {
-        alert('Error accessing camera: ' + err.message);
-      }
-    }
+    <footer class="app-footer">
+        <div class="controls-wrapper">
+            <button id="capture-btn" class="action-btn">Capture Photo</button>
+            <button id="toggle-btn" class="action-btn">Toggle Camera</button>
+        </div>
+    </footer>
 
-    initCamera();
-  </script>
+    <script src="app.js"></script>
 </body>
 </html>
